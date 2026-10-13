@@ -23,61 +23,52 @@
 
   <main>
     <h2>Customize Your Pizza</h2>
-    <p>Build your perfect pizza by choosing your size, crust, and toppings.</p>
 
     <section class="featured">
-      <h3>Choose Your Pizza Size</h3>
-      <label>
-        <input type="radio" name="size" value="small" checked>
-        Small - $8.99
-      </label>
-      <br>
-      <label>
-        <input type="radio" name="size" value="medium">
-        Medium - $12.99
-      </label>
-      <br>
-      <label>
-        <input type="radio" name="size" value="large">
-        Large - $15.99
-      </label>
 
-      <h3>Choose Your Crust</h3>
-      <label>
-        <input type="radio" name="crust" value="thin" checked>
-        Thin Crust
-      </label>
-      <br>
-      <label>
-        <input type="radio" name="crust" value="regular">
-        Regular Crust
-      </label>
-      <br>
-      <label>
-        <input type="radio" name="crust" value="stuffed">
-        Stuffed Crust (+$2.00)
-      </label>
+<h3>Choose Your Pizza Size</h3>
+<label for="pizzaSize">Pizza Size:</label>
+<select id="pizzaSize">
+  <option value="small" selected>Small - $8.99</option>
+  <option value="medium">Medium - $12.99</option>
+  <option value="large">Large - $15.99</option>
+</select>
 
-      <h3>Choose Your Toppings</h3>
-      <label>
-        <input type="checkbox" name="toppings" value="pepperoni">
-        Pepperoni (+$1.00)
-      </label>
-      <br>
-      <label>
-        <input type="checkbox" name="toppings" value="mushrooms">
-        Mushrooms (+$0.75)
-      </label>
-      <br>
-      <label>
-        <input type="checkbox" name="toppings" value="olives">
-        Olives (+$0.75)
-      </label>
-      <br>
-      <label>
-        <input type="checkbox" name="toppings" value="extra-cheese">
-        Extra Cheese (+$1.00)
-      </label>
+<h3>Choose Your Crust</h3>
+<label for="pizzaCrust">Crust Type:</label>
+<select id="pizzaCrust">
+  <option value="thin" selected>Thin Crust</option>
+  <option value="regular">Regular Crust</option>
+  <option value="stuffed">Stuffed Crust (+$2.00)</option>
+</select>
+
+<h3>Choose Your Toppings</h3>
+<label>
+  <input type="checkbox" name="toppings"
+         value="pepperoni" data-price="1.00">
+  Pepperoni (+$1.00)
+</label>
+<br>
+
+<label>
+  <input type="checkbox" name="toppings"
+         value="mushrooms" data-price="0.75">
+  Mushrooms (+$0.75)
+</label>
+<br>
+
+<label>
+  <input type="checkbox" name="toppings"
+         value="olives" data-price="0.75">
+  Olives (+$0.75)
+</label>
+<br>
+
+<label>
+  <input type="checkbox" name="toppings"
+         value="extra-cheese" data-price="1.00">
+  Extra Cheese (+$1.00)
+</label>
 
       <h3>Your Pizza Summary</h3>
       <p id="pizzaSummary">Small pizza with thin crust</p>
