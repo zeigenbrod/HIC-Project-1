@@ -1,0 +1,97 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customize Pizza - Kent Pizza</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <h1>Kent Pizza</h1>
+    <p>Fresh pizza made your way</p>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="menu.html">Menu</a>
+      <a href="deals.html">Deals</a>
+      <a href="account.html">Account</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Customize Your Pizza</h2>
+    <p>Build your perfect pizza by choosing your size, crust, and toppings.</p>
+
+    <section class="featured">
+      <h3>Choose Your Pizza Size</h3>
+      <label>
+        <input type="radio" name="size" value="small" checked>
+        Small - $8.99
+      </label>
+      <br>
+      <label>
+        <input type="radio" name="size" value="medium">
+        Medium - $12.99
+      </label>
+      <br>
+      <label>
+        <input type="radio" name="size" value="large">
+        Large - $15.99
+      </label>
+
+      <h3>Choose Your Crust</h3>
+      <label>
+        <input type="radio" name="crust" value="thin" checked>
+        Thin Crust
+      </label>
+      <br>
+      <label>
+        <input type="radio" name="crust" value="regular">
+        Regular Crust
+      </label>
+      <br>
+      <label>
+        <input type="radio" name="crust" value="stuffed">
+        Stuffed Crust (+$2.00)
+      </label>
+
+      <h3>Choose Your Toppings</h3>
+      <label>
+        <input type="checkbox" name="toppings" value="pepperoni">
+        Pepperoni (+$1.00)
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" name="toppings" value="mushrooms">
+        Mushrooms (+$0.75)
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" name="toppings" value="olives">
+        Olives (+$0.75)
+      </label>
+      <br>
+      <label>
+        <input type="checkbox" name="toppings" value="extra-cheese">
+        Extra Cheese (+$1.00)
+      </label>
+
+      <h3>Your Pizza Summary</h3>
+      <p id="pizzaSummary">Small pizza with thin crust</p>
+      <p id="pizzaPrice" class="price">Total: $8.99</p>
+
+      <button type="button" onclick="undoPizza()">Undo Changes</button>
+      <button type="button" onclick="addPizzaToCart()">Add to Cart</button>
+      <p id="message"></p>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+
+</html>
+```
