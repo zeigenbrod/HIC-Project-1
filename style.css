@@ -82,3 +82,35 @@ main p{
     font-weight: bold;
     color: darkblue;
 }
+
+#account-form{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 400px;
+    margin: 20px auto;
+    text-align: left;
+}
+
+#account-form input{
+    padding: 12px;
+    border: 1px solid gold;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+#account-form label{
+    font-weight: bold;
+}
+
+#account-form button{
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
+#account-message{
+    text-align: center;
+    font-weight: bold;
+    color: darkblue;
+}
