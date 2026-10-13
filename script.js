@@ -36,8 +36,7 @@ function getPizzaDetails() {
             toppingPrice += Number(topping.dataset.price || 0);
         });
 
-    const total =
-        (sizePrices[size] || 8.99) + (crustPrices[crust] || 0) + toppingPrice;
+    const total = (sizePrices[size] || 8.99) + (crustPrices[crust] || 0) + toppingPrice;
 
     return {
         size: size,
@@ -86,7 +85,6 @@ function undoPizza() {
     }
 }
 
-// Add to cart
 function addPizzaToCart() {
     const pizza = getPizzaDetails();
     const cart = getCart();
@@ -109,3 +107,104 @@ document.addEventListener("change", function (event) {
     }
 });
 
+
+ // Cart functions
+
+function getCart() {
+    return JSON.parse(localStorage.getItem("kentPizzaCart")) || [];
+}
+
+function saveCart(cart) {
+    localStorage.setItem("kentPizzaCart", JSON.stringify(cart));
+}
+
+function money(amount) {
+    return "$" + Number(amount).toFixed(2);
+}
+
+function saveCartUndo() {
+    sessionStorage.setItem("previousCart", JSON.stringify(getCart()));
+}
+
+
+// Display cart items and totals
+function renderCart() {
+    const cartItems = document.getElementById("cartItems");
+
+    const cart = getCart();
+    cartItems.innerHTML = "";
+
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>Your cart is empty.</p>";
+    }
+
+    for (let i = 0; i < cart.length; i++) {
+        let pizza = cart[i];
+        subtotal += pizza.price;
+
+        cartItems.innerHTML +=
+            "<div class='cart-item'>" +
+            "<h4>" + pizza.size + " Pizza</h4>" +
+            "<p>Crust: " + pizza.crust + "</p>" +
+            "<p>Toppings: " + (pizza.toppings.length > 0
+                ? pizza.toppings.join(", ")
+                : "None") + "</p>" +
+            "<p>Price: " + money(pizza.price) + "</p>" +
+            "<button onclick='removePizza(" + i + ")'>Remove</button>" +
+            "</div>";
+    }
+
+    let tax = subtotal * 0.0675;
+    let total = subtotal + tax;
+
+    document.getElementById("subtotal").textContent =
+        "Subtotal: " + money(subtotal);
+
+    document.getElementById("tax").textContent =
+        "Tax: " + money(tax);
+
+    document.getElementById("total").textContent =
+        "Total: " + money(total);
+}
+
+// Remove a pizza
+function removePizza(index) {
+    let cart = getCart();
+    saveCartUndo();
+    cart.splice(index, 1);
+    saveCart(cart);
+
+    renderCart();
+}
+
+// Clear the cart
+function clearCart() {
+    saveCartUndo();
+    saveCart([]);
+
+    renderCart();
+}
+
+// Undo the last cart action
+function undoCartAction() {
+    let previousCart = sessionStorage.getItem("previousCart");
+
+    if (previousCart) {
+        saveCart(JSON.parse(previousCart));
+        sessionStorage.removeItem("previousCart");
+        renderCart();
+    } else {
+        alert("Nothing to undo.");
+    }
+}
+
+// Load cart
+document.addEventListener("DOMContentLoaded", function () {
+    renderCart();
+
+    if (document.getElementById("pizzaSize")) {
+        updatePizzaSummary();
+    }
+});
