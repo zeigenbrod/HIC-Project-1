@@ -1,13 +1,15 @@
 console.log("Kent Pizza is ready");
 
+
 const accountForm = document.querySelector("#account-form");
 
-if(accountForm){
-    accountForm.addEventListener("submit", function (event){
+if (accountForm) {
+    accountForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
         const message = document.querySelector("#account-message");
-        message.textContent = "Demo sign-in complete. Account features coming soon";
+        message.textContent = "Demo sign-in complete!";
+
         accountForm.reset();
     });
 }
@@ -131,6 +133,10 @@ function saveCartUndo() {
 function renderCart() {
     const cartItems = document.getElementById("cartItems");
 
+    if(!cartItems){
+        return;
+    }
+
     const cart = getCart();
     cartItems.innerHTML = "";
 
@@ -146,7 +152,7 @@ function renderCart() {
 
         cartItems.innerHTML +=
             "<div class='cart-item'>" +
-            "<h4>" + pizza.size + " Pizza</h4>" +
+            "<h4>" + (pizza.name || (pizza.size + " Pizza")) + "</h4>" +
             "<p>Crust: " + pizza.crust + "</p>" +
             "<p>Toppings: " + (pizza.toppings.length > 0
                 ? pizza.toppings.join(", ")
@@ -200,11 +206,64 @@ function undoCartAction() {
     }
 }
 
-// Load cart
+
+ //load cart and initialize page features
 document.addEventListener("DOMContentLoaded", function () {
     renderCart();
-
-    if (document.getElementById("pizzaSize")) {
+    const sizeSelect = document.getElementById("pizzaSize");
+    //only run the preset logic on the customization page
+    if (sizeSelect) {
+        const params = new URLSearchParams(window.location.search);
+        const pizzaType = params.get("pizza");
+        //default specialty pizzas to medium
+        if (pizzaType === "margherita" || pizzaType === "pepperoni") {
+            sizeSelect.value = "medium";
+            document.getElementById("pizzaCrust").value = "regular";
+        }
+        //preset toppings for each specialty pizza
+        const presets = {
+            margherita: ["tomatoes", "basil"],
+            pepperoni: ["pepperoni"]
+        };
+        if (presets[pizzaType]) {
+            document.querySelectorAll('input[name="toppings"]').forEach(function (topping) {
+                topping.checked = presets[pizzaType].includes(topping.value);
+            });
+        }
+        //update the displayed price and summary
         updatePizzaSummary();
     }
 });
+
+
+// deals page feedback
+document.querySelectorAll(".deal-button").forEach(function(button){
+    button.addEventListener("click", function() {
+        const message = document.getElementById("deal-message");
+        const dealName = button.dataset.deal;
+
+        if(message){
+            message.textContent = dealName + " selected! Explore the menu to contine your order";
+        }
+    });
+});
+
+function addSpecialityPizza(name, toppings, price){
+    const cart = getCart();
+
+    saveCartUndo();
+
+    cart.push({
+        name: name,
+        size: "medium",
+        crust: "regular",
+        toppings: toppings,
+        price: price
+    });
+
+    saveCart(cart);
+    const message = document.getElementById("menu-message");
+    if(message){
+        message.textContent = name + " added to your cart!";
+    }
+}
