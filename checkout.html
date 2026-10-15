@@ -22,14 +22,15 @@
     </nav>
   </header>
 
-  <main>
-    <h2>Your Shopping Cart</h2>
-    <p>Review your order.</p>
+<main>
+  <h2>Checkout</h2>
+  <p>Enter your information to complete your order.</p>
 
+  <form id="checkoutForm">
     <section class="featured">
-      <h3>Items in Your Cart</h3>
+      <h3>Items in Your Order</h3>
 
-      <div id="cartItems">
+      <div id="checkoutSummary">
         <p>Your cart is currently empty.</p>
       </div>
 
@@ -38,19 +39,60 @@
       <p id="tax">Tax: $0.00</p>
       <p id="total" class="price">Total: $0.00</p>
 
-      <button type="button" onclick="undoCartAction()">
-        Undo Last Action
-      </button>
+      <h3>Delivery Information</h3>
 
-      <button type="button" onclick="clearCart()">
-        Clear Cart
-      </button>
+      <p>
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"
+          placeholder="Jane Smith" autocomplete="name" required>
+      </p>
 
-      <a href="customize.html" class="button">Add to Order</a>
-      <a href="checkout.html" class="button">Proceed to Checkout</a>
+      <p>
+        <label for="address">Delivery Address:</label><br>
+        <input type="text" id="address" name="address" placeholder="123 Main St"
+          autocomplete="street-address" required>
+      </p>
+
+      <p>
+        <label for="city">City:</label><br>
+        <input type="text" id="city" name="city" placeholder="Kent"
+          autocomplete="address-level2" required>
+      </p>
+
+      <p>
+        <label for="phone">Phone Number:</label><br>
+        <input type="tel" id="phone" name="phone" inputmode="numeric"
+          pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" maxlength="12"
+          title="Enter a 10-digit phone number like 123-456-7890"
+          placeholder="123-456-7890" autocomplete="tel-national" required>
+      </p>
+
+      <h3>Payment Information</h3>
+
+      <p>
+        <label for="cardNumber">Card Number:</label><br>
+        <input type="text" id="cardNumber" name="cardNumber" inputmode="numeric"
+          pattern="[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}" maxlength="19"
+          title="Enter a 16-digit card number in groups of 4, like 1234 5678 1234 5678"
+          placeholder="1234 5678 1234 5678" autocomplete="cc-number" required>
+      </p>
+
+      <p>
+        <label for="expiry">Expiration Date:</label><br>
+        <input type="month" id="expiry" name="expiry"
+          title="Choose the month and year on your card, like 2028-05"
+          placeholder="2028-05" autocomplete="cc-exp" required>
+      </p>
+
+      <p id="message"></p>
+
+      <button type="submit">Place Order</button>
+
+      <a href="cart.html" class="button">Back to Cart</a>
 
     </section>
-  </main>
+  </form>
+</main>
 
   <script src="script.js"></script>
 </body>
