@@ -70,7 +70,7 @@ function updatePizzaSummary() {
 
 // Reset pizza to default
 function undoPizza() {
-    document.getElementById("pizzaSize").value = "small";
+    document.getElementById("pizzaSize").value = "Small";
     document.getElementById("pizzaCrust").value = "thin";
 
     document.querySelectorAll('input[name="toppings"]')
