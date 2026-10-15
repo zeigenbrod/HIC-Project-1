@@ -267,3 +267,186 @@ function addSpecialityPizza(name, toppings, price){
         message.textContent = name + " added to your cart!";
     }
 }
+
+// Checkout page functions
+
+// Show order items and totals
+function renderCheckout() {
+    const checkoutSummary = document.getElementById("checkoutSummary");
+
+    if (!checkoutSummary) {
+        return;
+    }
+
+    const cart = getCart();
+    checkoutSummary.innerHTML = "";
+
+    let subtotal = 0;
+
+    if (cart.length === 0) {
+        checkoutSummary.innerHTML = "<p>Your cart is empty.</p>";
+    }
+
+    for (let i = 0; i < cart.length; i++) {
+        let pizza = cart[i];
+        subtotal += pizza.price;
+
+        checkoutSummary.innerHTML +=
+            "<div class='cart-item'>" +
+            "<h4>" + (pizza.name || (pizza.size + " Pizza")) + "</h4>" +
+            "<p>Crust: " + pizza.crust + "</p>" +
+            "<p>Toppings: " + (pizza.toppings.length > 0
+                ? pizza.toppings.join(", ")
+                : "None") + "</p>" +
+            "<p>Price: " + money(pizza.price) + "</p>" +
+            "</div>";
+    }
+
+    let tax = subtotal * 0.0675;
+    let total = subtotal + tax;
+
+    document.getElementById("subtotal").textContent =
+        "Subtotal: " + money(subtotal);
+
+    document.getElementById("tax").textContent =
+        "Tax: " + money(tax);
+
+    document.getElementById("total").textContent =
+        "Total: " + money(total);
+}
+
+// Place the order and clear the cart
+function placeOrder(event) {
+    event.preventDefault();
+ 
+    const message = document.getElementById("message");
+    const cart = getCart();
+ 
+    if (cart.length === 0) {
+        message.textContent = "Your cart is empty.";
+        return;
+    }
+ 
+    let subtotal = 0;
+ 
+    for (let i = 0; i < cart.length; i++) {
+        subtotal += cart[i].price;
+    }
+ 
+    let tax = subtotal * 0.0675;
+ 
+    const order = {
+        number: Math.floor(100000 + Math.random() * 900000),
+        date: new Date().toLocaleDateString(),
+        name: document.getElementById("name").value,
+        address: document.getElementById("address").value + ", " + document.getElementById("city").value,
+        items: cart,
+        subtotal: subtotal,
+        tax: tax,
+        total: subtotal + tax
+    };
+ 
+    localStorage.setItem("kentPizzaOrder", JSON.stringify(order));
+ 
+    saveCart([]);
+    sessionStorage.removeItem("previousCart");
+ 
+    window.location.href = "confirmation.html";
+}
+ 
+const checkoutForm = document.getElementById("checkoutForm");
+ 
+if (checkoutForm) {
+    checkoutForm.addEventListener("submit", placeOrder);
+    renderCheckout();
+}
+
+// Confirmation page functions
+ 
+// Show the saved order details
+function renderConfirmation() {
+    const confirmedItems = document.getElementById("confirmedItems");
+ 
+    if (!confirmedItems) {
+        return;
+    }
+ 
+    const order = JSON.parse(localStorage.getItem("kentPizzaOrder"));
+ 
+    if (!order) {
+        confirmedItems.innerHTML = "<p>No recent order found.</p>";
+        return;
+    }
+ 
+    document.getElementById("orderNumber").textContent =
+        "Order Number: " + order.number;
+ 
+    document.getElementById("orderDate").textContent =
+        "Order Date: " + order.date;
+ 
+    confirmedItems.innerHTML = "";
+ 
+    for (let i = 0; i < order.items.length; i++) {
+        let pizza = order.items[i];
+ 
+        confirmedItems.innerHTML +=
+            "<div class='cart-item'>" +
+            "<h4>" + (pizza.name || (pizza.size + " Pizza")) + "</h4>" +
+            "<p>Crust: " + pizza.crust + "</p>" +
+            "<p>Toppings: " + (pizza.toppings.length > 0
+                ? pizza.toppings.join(", ")
+                : "None") + "</p>" +
+            "<p>Price: " + money(pizza.price) + "</p>" +
+            "</div>";
+    }
+ 
+    document.getElementById("deliveryName").textContent =
+        "Name: " + order.name;
+ 
+    document.getElementById("deliveryAddress").textContent =
+        "Address: " + order.address;
+ 
+    document.getElementById("confirmedSubtotal").textContent =
+        "Subtotal: " + money(order.subtotal);
+ 
+    document.getElementById("confirmedTax").textContent =
+        "Tax: " + money(order.tax);
+ 
+    document.getElementById("confirmedTotal").textContent =
+        "Total: " + money(order.total);
+}
+ 
+renderConfirmation();
+ 
+
+// Tracking page functions
+ 
+// Show the saved order number and total
+function renderTracking() {
+    const orderNumber = document.getElementById("orderNumber");
+ 
+    if (!orderNumber) {
+        return;
+    }
+ 
+    const order = JSON.parse(localStorage.getItem("kentPizzaOrder"));
+ 
+    if (!order) {
+        orderNumber.textContent = "Order Number: No recent order found";
+ 
+        document.getElementById("orderStatus").textContent =
+            "Status: No order to track";
+ 
+        document.getElementById("estimatedDelivery").textContent =
+            "Estimated Delivery: N/A";
+ 
+        return;
+    }
+ 
+    orderNumber.textContent = "Order Number: " + order.number;
+ 
+    document.getElementById("trackingTotal").textContent =
+        "Total: " + money(order.total);
+}
+ 
+renderTracking();
