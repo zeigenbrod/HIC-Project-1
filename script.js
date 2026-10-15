@@ -130,10 +130,11 @@ function saveCartUndo() {
 
 
 // Display cart items and totals
+
 function renderCart() {
     const cartItems = document.getElementById("cartItems");
 
-    if(!cartItems){
+    if (!cartItems) {
         return;
     }
 
@@ -147,19 +148,35 @@ function renderCart() {
     }
 
     for (let i = 0; i < cart.length; i++) {
-        let pizza = cart[i];
-        subtotal += pizza.price;
+        const item = cart[i];
+        subtotal += item.price;
 
-        cartItems.innerHTML +=
+        let itemHTML =
             "<div class='cart-item'>" +
-            "<h4>" + (pizza.name || (pizza.size + " Pizza")) + "</h4>" +
-            "<p>Crust: " + pizza.crust + "</p>" +
-            "<p>Toppings: " + (pizza.toppings.length > 0
-                ? pizza.toppings.join(", ")
-                : "None") + "</p>" +
-            "<p>Price: " + money(pizza.price) + "</p>" +
+            "<h4>" + (item.name || (item.size + " Pizza")) + "</h4>";
+
+        if (item.type === "drink") {
+            itemHTML +=
+                "<p>Price: " + money(item.price) + "</p>";
+        } else {
+            itemHTML +=
+                "<p>Size: " +
+                (item.size.charAt(0).toUpperCase() + item.size.slice(1)) +
+                "</p>" +
+                "<p>Crust: " + item.crust + "</p>" +
+                "<p>Toppings: " +
+                (item.toppings && item.toppings.length > 0
+                    ? item.toppings.join(", ")
+                    : "None") +
+                "</p>" +
+                "<p>Price: " + money(item.price) + "</p>";
+        }
+
+        itemHTML +=
             "<button onclick='removePizza(" + i + ")'>Remove</button>" +
             "</div>";
+
+        cartItems.innerHTML += itemHTML;
     }
 
     let tax = subtotal * 0.0675;
@@ -249,16 +266,52 @@ document.querySelectorAll(".deal-button").forEach(function(button) {
 
         const message = document.getElementById(messageId);
 
+        if(dealName === "Pizza Night"){
+            const cart = getCart();
+            console.log("Cart page is rendering:", cart);
+            saveCartUndo();
+            cart.push({
+                name: "Pizza Night Deal - Medium Pizza 1",
+                size: "medium",
+                crust: "regular",
+                toppings: [],
+                price: 11
+            });
+            cart.push({
+                name: "Pizza Night Deal - Medium Pizza 2",
+                size: "medium",
+                crust: "regular",
+                toppings: [],
+                price: 11
+            });
+
+            saveCart(cart);
+        } else if(dealName === "Lunch Special"){
+            const cart = getCart();
+            saveCartUndo();
+            cart.push({
+                name: "Lunch Special - Personal Pizza",
+                size: "personal",
+                crust: "regular",
+                toppings: [],
+                price: 7.99
+            });
+            cart.push({
+                type: "drink",
+                name: "Soda",
+                drink: "",
+                price: 2.00
+            });
+            saveCart(cart);
+        }
+
         if (message) {
             // Cancel the previous fade timer.
             if (message.fadeTimer) {
                 clearTimeout(message.fadeTimer);
             }
 
-            // Show the confirmation.
-            message.textContent =
-                dealName + " selected! Explore the menu or check your cart to continue your order.";
-
+            message.textContent = dealName === "Pizza Night" ? "Pizza Night added to your cart! Two medium pizzas for $22" : dealName + " selected!";
             message.classList.add("show");
 
             // Fade after 0.8 seconds without another click.
