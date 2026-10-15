@@ -21,11 +21,10 @@ function getPizzaDetails() {
     const size = document.getElementById("pizzaSize").value;
     const crust = document.getElementById("pizzaCrust").value;
 
-    const sizePrices = { small: 8.99, medium: 12.99, large: 15.99
+    const sizePrices = { Small: 8.99, Medium: 12.99, Large: 15.99
     };
 
-    const crustPrices = { thin: 0, regular: 0, stuffed: 2
-    };
+    const crustPrices = { thin: 0, regular: 0};
 
     let toppings = [];
     let toppingPrice = 0;
