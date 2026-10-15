@@ -166,3 +166,90 @@ main p{
 .deal-message.show{
     opacity: 1;
 }
+
+.deal-modal[hidden]{
+    display: none;
+}
+
+.deal-modal{
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.deal-modal-content{
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 560px;
+    max-height: 85vh;
+    overflow-y: auto;
+    padding: 30px;
+    background: #FFFFFF;
+    color:#002664;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+    text-align: left;
+}
+
+.deal-model-content h2{
+    margin-top: 0;
+    text-align: center;
+}
+
+.modal-close{
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    color:#002664;
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.deal-toppings{
+    display: grid;
+    grid-display-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-bottom: 22px;
+}
+
+.deal-toppings label{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.deal-modal-content select{
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 8px;
+}
+
+.modal-actions{
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.modal-actions .button{
+    margin-top: 0;
+}
+
+@media (max-width: 480px){
+    .deal-modal-content{
+        padding: 24px 18px;
+    }
+    .deal-toppings{
+        grid-template-columns: 1fr;
+    }
+}

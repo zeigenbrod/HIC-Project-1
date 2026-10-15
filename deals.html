@@ -28,8 +28,11 @@
             <h3>Pizza Night</h3>
             <p>Get two medium pizzas for $22! Perfect for sharing with friends and family</p>
             <p class="price">$22.00</p>
+
+            
+
             <button type="button" class="button deal-button" data-deal="Pizza Night">
-                Select Deal
+                Add Pizza Night to Cart
             </button>
             <a href="menu.html" class="button">Explore the Menu</a>
             <p class="deal-message" id="pizza-night-message" role="status" aria-live="polite"></p>
@@ -39,14 +42,47 @@
             <h3>Lunch Special</h3>
             <p>Enjoy a personal pizza and a soda for a tasty lunch</p>
             <p class="price">$9.99</p>
+
             <button type="button" class="button deal-button" data-deal="Lunch Special">
-                Select Deal
+                Add Lunch Special to Cart
             </button>
             <a href="menu.html" class="button">Explore the Menu</a>
             <p class="deal-message" id="lunch-special-message" role="status" aria-live="polite"></p>
         </section>
     </main>
     <p id="deal-message" role="status" aria-live="polite"></p>
+
+    <div id="deal-modal" class="deal-modal" hidden>
+        <div class="deal-modal-content">
+            <button type="button" id="close-deal-modal" class="modal-close" aria-label="Close">&times;</button>
+            <h2 id="deal-modal-title">Customize Your Deal</h2>
+            <p id="deal-modal-description"></p>
+            <div id="pizza-night-options" hidden>
+                <h3>Pizza 1 - Choose 1-2 toppings</h3>
+                <div id="night-pizza-1-options" class="deal-toppings"></div>
+                <h3>Pizza 2 - Choose 1-2 toppings</h3>
+                <div id="night-pizza-2-options" class="deal-toppings"></div>
+            </div>
+            <div id="lunch-options" hidden>
+                <h3>Pizza - Choose your toppings</h3>
+                <div id="lunch-topping-options" class="deal-toppings"></div>
+                <h3>Choose a drink</h3>
+                <label for="lunch-drink">Drink:</label>
+                <select id="lunch-drink">
+                    <option value="Coke">Coke</option>
+                    <option value="Sprite">Sprite</option>
+                    <option value="Root Beer">Root Beer</option>
+                    <option value="Water">Water</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button type="button" id="cancel-deal" class="button">Cancel</button>
+                <button type="button" id="confirm-deal" class="button">Add to Cart</button>
+            </div>
+            <p id="modal-deal-message" role="status" aria-live="polite"></p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

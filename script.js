@@ -255,70 +255,178 @@ document.addEventListener("DOMContentLoaded", function () {
 // deals page feedback
 
  // deals page feedback
+
+
+const dealToppingChoices = [
+    "pepperoni",
+    "mushrooms",
+    "olives",
+    "extra-cheese",
+    "tomatoes",
+    "basil",
+    "sausage",
+    "green-peppers",
+    "onions",
+    "bacon"
+];
+
+let activeDeal = "";
+
+function createDealToppingOptions(containerId, inputName) {
+    const container = document.getElementById(containerId);
+    if (!container || container.children.length > 0) return;
+
+    dealToppingChoices.forEach(function(topping) {
+        const label = document.createElement("label");
+        const checkbox = document.createElement("input");
+
+        checkbox.type = "checkbox";
+        checkbox.name = inputName;
+        checkbox.value = topping;
+
+        label.appendChild(checkbox);
+        label.appendChild(
+            document.createTextNode(
+                topping.replace(/-/g, " ").replace(/\b\w/g, function(c) {
+                    return c.toUpperCase();
+                })
+            )
+        );
+
+        container.appendChild(label);
+    });
+}
+
+createDealToppingOptions("night-pizza-1-options", "night-pizza-1");
+createDealToppingOptions("night-pizza-2-options", "night-pizza-2");
+createDealToppingOptions("lunch-topping-options", "lunch-toppings");
+
+function openDealModal(dealName) {
+    activeDeal = dealName;
+
+    const modal = document.getElementById("deal-modal");
+    const title = document.getElementById("deal-modal-title");
+    const description = document.getElementById("deal-modal-description");
+    const pizzaNightOptions = document.getElementById("pizza-night-options");
+    const lunchOptions = document.getElementById("lunch-options");
+    const modalMessage = document.getElementById("modal-deal-message");
+
+    if (!modal || !title || !description) return;
+
+    title.textContent = dealName;
+    description.textContent = dealName === "Pizza Night"
+        ? "Choose 1–2 toppings for each medium pizza. The deal costs $22 total."
+        : "Choose your pizza toppings and a drink. The deal costs $9.99 total.";
+
+    pizzaNightOptions.hidden = dealName !== "Pizza Night";
+    lunchOptions.hidden = dealName !== "Lunch Special";
+    modalMessage.textContent = "";
+
+    modal.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+        input.checked = false;
+    });
+
+    const drink = document.getElementById("lunch-drink");
+    if (drink) drink.selectedIndex = 0;
+
+    modal.hidden = false;
+}
+
+function closeDealModal() {
+    const modal = document.getElementById("deal-modal");
+    if (modal) modal.hidden = true;
+    activeDeal = "";
+}
+
 document.querySelectorAll(".deal-button").forEach(function(button) {
     button.addEventListener("click", function() {
-        const dealName = button.dataset.deal;
-
-        const messageId = dealName === "Pizza Night"
-            ? "pizza-night-message"
-            : "lunch-special-message";
-
-        const message = document.getElementById(messageId);
-
-        if(dealName === "Pizza Night"){
-            const cart = getCart();
-            console.log("Cart page is rendering:", cart);
-            saveCartUndo();
-            cart.push({
-                name: "Pizza Night Deal - Medium Pizza 1",
-                size: "medium",
-                crust: "regular",
-                toppings: [],
-                price: 11
-            });
-            cart.push({
-                name: "Pizza Night Deal - Medium Pizza 2",
-                size: "medium",
-                crust: "regular",
-                toppings: [],
-                price: 11
-            });
-
-            saveCart(cart);
-        } else if(dealName === "Lunch Special"){
-            const cart = getCart();
-            saveCartUndo();
-            cart.push({
-                name: "Lunch Special - Personal Pizza",
-                size: "personal",
-                crust: "regular",
-                toppings: [],
-                price: 7.99
-            });
-            cart.push({
-                type: "drink",
-                name: "Soda",
-                drink: "",
-                price: 2.00
-            });
-            saveCart(cart);
-        }
-
-        if (message) {
-            // Cancel the previous fade timer.
-            if (message.fadeTimer) {
-                clearTimeout(message.fadeTimer);
-            }
-
-            message.textContent = dealName === "Pizza Night" ? "Pizza Night added to your cart! Two medium pizzas for $22" : dealName + " selected!";
-            message.classList.add("show");
-
-            // Fade after 0.8 seconds without another click.
-            message.fadeTimer = setTimeout(function() {
-                message.classList.remove("show");
-            }, 2000);
-        }
+        openDealModal(button.dataset.deal);
     });
+});
+
+document.getElementById("close-deal-modal")?.addEventListener("click", closeDealModal);
+document.getElementById("cancel-deal")?.addEventListener("click", closeDealModal);
+
+document.getElementById("deal-modal")?.addEventListener("click", function(event) {
+    if (event.target === this) closeDealModal();
+});
+
+document.getElementById("confirm-deal")?.addEventListener("click", function() {
+    const modalMessage = document.getElementById("modal-deal-message");
+
+    function getSelected(name) {
+        return Array.from(
+            document.querySelectorAll('input[name="' + name + '"]:checked')
+        ).map(function(input) {
+            return input.value;
+        });
+    }
+
+    let cart = getCart();
+
+    if (activeDeal === "Pizza Night") {
+        const toppings1 = getSelected("night-pizza-1");
+        const toppings2 = getSelected("night-pizza-2");
+
+        if (toppings1.length < 1 || toppings1.length > 2 ||
+            toppings2.length < 1 || toppings2.length > 2) {
+            modalMessage.textContent = "Choose 1–2 toppings for each pizza.";
+            return;
+        }
+
+        saveCartUndo();
+
+        cart.push({
+            name: "Pizza Night Deal - Medium Pizza 1",
+            size: "Medium",
+            crust: "regular",
+            toppings: toppings1,
+            price: 11
+        });
+
+        cart.push({
+            name: "Pizza Night Deal - Medium Pizza 2",
+            size: "Medium",
+            crust: "regular",
+            toppings: toppings2,
+            price: 11
+        });
+
+        saveCart(cart);
+        closeDealModal();
+
+        const message = document.getElementById("pizza-night-message");
+        if (message) message.textContent = "Pizza Night added to your cart! Two pizzas for $22.";
+
+    } else if (activeDeal === "Lunch Special") {
+        const toppings = getSelected("lunch-toppings");
+        const drinkSelect = document.getElementById("lunch-drink");
+        const drink = drinkSelect ? drinkSelect.value : "Cola";
+        console.log("Selected drink:", drink);
+
+        saveCartUndo();
+
+        cart.push({
+            name: "Lunch Special - Small Pizza",
+            size: "Small",
+            crust: "regular",
+            toppings: toppings,
+            price: 7.99
+        });
+
+        cart.push({
+            type: "drink",
+            name: "Drink - " + drink,
+            drink: drink,
+            price: 2.00
+        });
+
+        saveCart(cart);
+        closeDealModal();
+
+        const message = document.getElementById("lunch-special-message");
+        if (message) message.textContent = "Lunch Special added! Pizza and " + drink + " for $9.99.";
+    }
 });
 
 
@@ -533,4 +641,30 @@ function renderTracking() {
 }
  
 renderTracking();
+
+
+document.querySelectorAll(".drink-button").forEach(function(button) {
+    button.addEventListener("click", function() {
+        const drink = button.dataset.drink;
+        const price = Number(button.dataset.price);
+
+        const cart = getCart();
+        saveCartUndo();
+
+        cart.push({
+            type: "drink",
+            name: "Drink - " + drink,
+            drink: drink,
+            price: price
+        });
+
+        saveCart(cart);
+
+        const message = button.nextElementSibling;
+        if (message) {
+            message.textContent = drink + " added to your cart!";
+        }
+    });
+});
+
 
