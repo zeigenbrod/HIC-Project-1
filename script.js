@@ -237,16 +237,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 // deals page feedback
-document.querySelectorAll(".deal-button").forEach(function(button){
+
+ // deals page feedback
+document.querySelectorAll(".deal-button").forEach(function(button) {
     button.addEventListener("click", function() {
-        const message = document.getElementById("deal-message");
         const dealName = button.dataset.deal;
 
-        if(message){
-            message.textContent = dealName + " selected! Explore the menu to contine your order";
+        const messageId = dealName === "Pizza Night"
+            ? "pizza-night-message"
+            : "lunch-special-message";
+
+        const message = document.getElementById(messageId);
+
+        if (message) {
+            // Cancel the previous fade timer.
+            if (message.fadeTimer) {
+                clearTimeout(message.fadeTimer);
+            }
+
+            // Show the confirmation.
+            message.textContent =
+                dealName + " selected! Explore the menu or check your cart to continue your order.";
+
+            message.classList.add("show");
+
+            // Fade after 0.8 seconds without another click.
+            message.fadeTimer = setTimeout(function() {
+                message.classList.remove("show");
+            }, 2000);
         }
     });
 });
+
 
 function addSpecialityPizza(name, toppings, price){
     const cart = getCart();
@@ -262,8 +284,18 @@ function addSpecialityPizza(name, toppings, price){
     });
 
     saveCart(cart);
-    const message = document.getElementById("menu-message");
+
+    const messageId = name.toLowerCase().includes("margherita") ? "margherita-message" : "pepperoni-message";
+    const message = document.getElementById(messageId);
     if(message){
+        if(message.fadeTimer){
+            clearTimeout(message.fadeTimer);
+        }
+        message.classList.add("show");
         message.textContent = name + " added to your cart!";
+        message.fadeTimer = setTimeout(function() {
+            message.classList.remove("show");
+        }, 900);
     }
 }
+

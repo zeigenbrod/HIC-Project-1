@@ -23,6 +23,7 @@
         <main>
             <h2>Our Menu</h2>
             <p>Find your new favorite pizza</p>
+
             <section class="featured">
                 <h3>Classic Margherita</h3>
                 <p>Mozzarella, tomatoes, basil, and our signature sauce</p>
@@ -34,6 +35,7 @@
                 <a href="customize.html?pizza=margherita" class="button">
                     Customize Pizza
                 </a> 
+                <p class="pizza-message" id="margherita-message" role="status" aria-live="polite"></p>
             </section>
 
             <section class="featured">
@@ -46,9 +48,18 @@
                 <a href="customize.html?pizza=pepperoni" class="button">
                     Customize Pizza
                 </a>
+                <p class="pizza-message" id="pepperoni-message" role="status" aria-live="polite"></p>
             </section>
 
-            <p id="menu-message" role="status" aria-live="polite"></p>
+            <section class="featured">
+                <h3>Build Your Own Pizza</h3>
+                <p>Create your perfect pizza by choosing your size, crust, and toppings</p>
+                <a href="customize.html" class="button">Customize Your Pizza</a>
+            </section>
+
+            
+
+            
         </main>
 
         <script src="script.js"></script>
